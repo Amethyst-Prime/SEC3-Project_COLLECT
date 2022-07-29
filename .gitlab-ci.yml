@@ -1,0 +1,41 @@
+stages:
+    - build
+    - test
+    - deploy
+
+prod:
+    stage: build
+    script:
+        - echo "=================================start================================="
+        - npm install
+        - echo "finished install node modules"
+        - npm run build-prod
+        - echo 'copy dist files to nginx'
+        - cp -r dist /usr/local/nginx/html/frontend
+        - echo "================================finished==============================="
+        - echo "http://114.212.101.141:8080"
+    only:
+        - master
+
+
+dev:
+    stage: build
+    script:
+        - echo "=================================start================================="
+        - npm install
+        - echo "finished install node modules"
+        - npm run build
+        - echo 'copy dist files to nginx'
+        - cp -r dist /usr/local/nginx/html/frontend_test
+        - echo "================================finished==============================="
+        - echo "app running at http://114.212.101.141:8081"
+    only:
+        - dev
+        - web
+    when: manual
+
+# test:
+#     stage: test
+#     #    TODO 编写测试脚本
+#     script:
+#         - echo "finished test"
